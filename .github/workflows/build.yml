@@ -39,6 +39,35 @@ jobs:
           npx cap init "Mr Herres" "com.mrherres.app" --web-dir www
           npx cap add android
 
+      - name: Generate App Icons
+        run: |
+          python3 -m pip install pillow
+          python3 -c "
+          import os
+          from PIL import Image
+
+          img = Image.open('logo.jpg')
+          size = max(img.size)
+          square = Image.new('RGBA', (size, size), (12, 13, 16, 255))
+          square.paste(img, ((size - img.width) // 2, (size - img.height) // 2))
+
+          sizes = {
+              'mipmap-mdpi': 48,
+              'mipmap-hdpi': 72,
+              'mipmap-xhdpi': 96,
+              'mipmap-xxhdpi': 144,
+              'mipmap-xxxhdpi': 192,
+          }
+
+          for folder, s in sizes.items():
+              d = os.path.join('android/app/src/main/res', folder)
+              os.makedirs(d, exist_ok=True)
+              resized = square.resize((s, s), Image.Resampling.LANCZOS)
+              for name in ['ic_launcher.png', 'ic_launcher_round.png', 'ic_launcher_foreground.png']:
+                  resized.save(os.path.join(d, name))
+          "
+          sed -i 's/#FFFFFF/#0c0d10/g' android/app/src/main/res/values/ic_launcher_background.xml 2>/dev/null || true
+
       - name: Build Android APK
         run: |
           cd android
