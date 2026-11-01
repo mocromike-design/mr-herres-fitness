@@ -1,5 +1,5 @@
-﻿// Mr. Herres Trainingsapp - Service Worker voor Offline Gym Gebruik
-const CACHE_NAME = 'mr-herres-v11';
+// Mr. Herres Trainingsapp - Service Worker voor Offline Gym Gebruik
+const CACHE_NAME = 'mr-herres-v12';
 const ASSETS_TO_CACHE = [
   './',
   './92adeac7-32d0-4dcc-9b34-d052fc222f8e-resized-380x512.jpg',

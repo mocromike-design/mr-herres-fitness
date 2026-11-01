@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#0c0d10">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="description" content="Het officiÃ«le trainings- en periodiseringsschema van Mr. Herres.">
+  <meta name="description" content="Het officiële trainings- en periodiseringsschema van Mr. Herres.">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/jpeg" href="logo.jpg">
   <link rel="apple-touch-icon" href="logo.jpg">
@@ -42,6 +42,11 @@
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 body {
@@ -462,6 +467,7 @@ body {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
+  overflow-x: hidden;
 }
 
 .modal-overlay.active {
@@ -477,10 +483,12 @@ body {
   max-width: 680px;
   max-height: 92vh;
   overflow-y: auto;
-  padding: 20px;
+  overflow-x: hidden;
+  padding: 16px 14px;
   box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
   transform: translateY(100%);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 .modal-overlay.active .modal-container {
@@ -495,6 +503,7 @@ body {
   .modal-container {
     border-radius: var(--radius-lg);
     max-height: 88vh;
+    padding: 20px;
   }
 }
 
@@ -649,8 +658,12 @@ body {
   background: #13161c;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 16px;
+  padding: 14px 12px;
   margin-bottom: 22px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .logger-card h3 {
@@ -665,15 +678,22 @@ body {
 
 .log-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
   margin-bottom: 12px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group.full-width {
@@ -681,22 +701,37 @@ body {
 }
 
 .form-group label {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.3px;
 }
 
 .form-group input {
   background: var(--bg-input);
   border: 1px solid var(--border);
   color: var(--text-main);
-  padding: 12px;
+  padding: 11px 9px;
   border-radius: var(--radius-sm);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   font-family: inherit;
   transition: border-color 0.2s;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  -webkit-appearance: none;
+}
+
+.form-group input::placeholder {
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 400;
 }
 
 .form-group input:focus {
@@ -710,21 +745,29 @@ body {
   position: relative;
   align-items: center;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .date-input-container input[type="text"] {
   width: 100%;
-  padding-right: 44px;
+  min-width: 0;
+  max-width: 100%;
+  padding-right: 34px;
+  box-sizing: border-box;
 }
 
 .calendar-btn {
   position: absolute;
-  right: 6px;
+  right: 2px;
+  top: 50%;
+  transform: translateY(-50%);
   background: transparent;
   border: none;
   color: var(--text-muted);
   cursor: pointer;
-  padding: 8px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -967,7 +1010,7 @@ body {
 }
 
   </style>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
@@ -1041,7 +1084,7 @@ body {
       <div class="modal-header">
         <div class="modal-title-group">
           <h2 id="modalExerciseName">Oefening</h2>
-          <p id="modalExerciseMeta">4 sets Ã— 5-8 reps â€¢ Doelwit</p>
+          <p id="modalExerciseMeta">4 sets × 5-8 reps • Doelwit</p>
         </div>
         <button class="close-btn" id="closeModalBtn">&times;</button>
       </div>
@@ -1097,7 +1140,7 @@ body {
           </div>
           <div class="form-group">
             <label for="logNotes">Notitie (optioneel)</label>
-            <input type="text" id="logNotes" placeholder="bv. RIR 1, voelde sterk">
+            <input type="text" id="logNotes" placeholder="bv. RIR 1">
           </div>
         </div>
         <button class="primary-btn" id="saveLogBtn">
@@ -1182,7 +1225,7 @@ body {
 
       <div class="data-actions">
         <p style="font-size: 0.85rem; color: #94a3b8;">
-          Al je gegevens (gelogde gewichten, data en foto's) worden 100% privÃ© op je eigen Samsung toestel bewaard. Gebruik onderstaande knoppen om een backup te downloaden of over te zetten naar een andere telefoon.
+          Al je gegevens (gelogde gewichten, data en foto's) worden 100% privé op je eigen Samsung toestel bewaard. Gebruik onderstaande knoppen om een backup te downloaden of over te zetten naar een andere telefoon.
         </p>
 
         <button class="secondary-btn" id="exportDataBtn">
