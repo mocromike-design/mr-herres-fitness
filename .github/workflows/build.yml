@@ -22,27 +22,28 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '21'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Prepare Capacitor App
         run: |
           mkdir -p www
-          cp *.html *.css *.js *.json *.jpg *.png *.svg www/ 2>/dev/null || true
+          find . -maxdepth 1 -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" -o -name "*.json" -o -name "*.jpg" -o -name "*.png" -o -name "*.svg" \) -exec cp {} www/ \;
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap init "Mr. Herres" "com.mrherres.app" --web-dir www
+          npm install @capacitor/core@6 @capacitor/android@6
+          npm install -D @capacitor/cli@6
+          npx cap init "Mr Herres" "com.mrherres.app" --web-dir www
           npx cap add android
 
       - name: Build Android APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
