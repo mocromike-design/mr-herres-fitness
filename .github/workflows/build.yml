@@ -39,6 +39,62 @@ jobs:
           npx cap init "Mr Herres" "com.mrherres.app" --web-dir www
           npx cap add android
 
+      - name: Intercept Android Hardware Back Button
+        run: |
+          cat << 'EOF' > android/app/src/main/java/com/mrherres/app/MainActivity.java
+          package com.mrherres.app;
+
+          import android.os.Bundle;
+          import android.webkit.WebView;
+          import androidx.activity.OnBackPressedCallback;
+          import com.getcapacitor.BridgeActivity;
+
+          public class MainActivity extends BridgeActivity {
+              @Override
+              public void onCreate(Bundle savedInstanceState) {
+                  super.onCreate(savedInstanceState);
+
+                  getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                      @Override
+                      public void handleOnBackPressed() {
+                          if (getBridge() != null && getBridge().getWebView() != null) {
+                              WebView webView = getBridge().getWebView();
+                              webView.evaluateJavascript("if (typeof window.handleAndroidBack === 'function') { window.handleAndroidBack(); } else { 'unhandled'; }", value -> {
+                                  if (value != null && value.contains("handled") && !value.contains("unhandled")) {
+                                      // Handled in JS
+                                  } else {
+                                      setEnabled(false);
+                                      getOnBackPressedDispatcher().onBackPressed();
+                                      setEnabled(true);
+                                  }
+                              });
+                          } else {
+                              setEnabled(false);
+                              getOnBackPressedDispatcher().onBackPressed();
+                              setEnabled(true);
+                          }
+                      }
+                  });
+              }
+
+              @Override
+              public void onBackPressed() {
+                  if (getBridge() != null && getBridge().getWebView() != null) {
+                      WebView webView = getBridge().getWebView();
+                      webView.evaluateJavascript("if (typeof window.handleAndroidBack === 'function') { window.handleAndroidBack(); } else { 'unhandled'; }", value -> {
+                          if (value != null && value.contains("handled") && !value.contains("unhandled")) {
+                              // Handled in JS
+                          } else {
+                              runOnUiThread(() -> MainActivity.super.onBackPressed());
+                          }
+                      });
+                  } else {
+                      super.onBackPressed();
+                  }
+              }
+          }
+          EOF
+
       - name: Generate App Icons
         run: |
           python3 -m pip install pillow
@@ -66,7 +122,7 @@ jobs:
               for name in ['ic_launcher.png', 'ic_launcher_round.png', 'ic_launcher_foreground.png']:
                   resized.save(os.path.join(d, name))
           "
-          sed -i 's/#FFFFFF/#0c0d10/g' android/app/src/main/res/values/ic_launcher_background.xml 2>/dev/null || true
+          sed -i 's/<color name="ic_launcher_background">#FFFFFF<\/color>/<color name="ic_launcher_background">#0c0d10<\/color>/g' android/app/src/main/res/values/ic_launcher_background.xml 2>/dev/null || true
 
       - name: Build Android APK
         run: |
