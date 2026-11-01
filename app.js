@@ -461,9 +461,8 @@
     // Grafiek en geschiedenislijst renderen
     updateModalChartAndHistory(exercise.id);
 
-    // Toon modal
-    modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    // Toon modal met Android terugknop ondersteuning
+    openModalWithHistory(modal);
   }
 
   function updateExercisePhotoDisplay(exercise) {
@@ -528,11 +527,46 @@
     });
   }
 
+  // --- UNIFIED MODAL & SAMSUNG/ANDROID BACK BUTTON MANAGER ---
+  function openModalWithHistory(modalEl) {
+    if (!modalEl) return;
+    modalEl.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Voeg history state toe zodat de Samsung/Android 'terug'-knop het venster sluit i.p.v. de app af te sluiten
+    try {
+      window.history.pushState({ modalOpen: true, modalId: modalEl.id }, '');
+    } catch (e) {
+      console.log('pushState fout:', e);
+    }
+  }
+
+  function closeModalDirect(modalEl) {
+    if (!modalEl) return;
+    modalEl.classList.remove('active');
+    if (modalEl.id === 'exerciseModal') {
+      activeExercise = null;
+    }
+    const anyActive = document.querySelector('.modal-overlay.active');
+    if (!anyActive) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  function closeModalWithHistory(modalEl) {
+    if (!modalEl) return;
+    closeModalDirect(modalEl);
+    try {
+      if (window.history.state && window.history.state.modalOpen) {
+        window.history.back();
+      }
+    } catch (e) {
+      console.log('history.back fout:', e);
+    }
+  }
+
   function closeModal() {
     const modal = document.getElementById('exerciseModal');
-    if (modal) modal.classList.remove('active');
-    document.body.style.overflow = '';
-    activeExercise = null;
+    closeModalWithHistory(modal);
   }
 
   // --- FOTO UPLOAD HANDLER ---
@@ -674,15 +708,19 @@
 
     if (openPeriodBtn && periodModal) {
       openPeriodBtn.addEventListener('click', () => {
-        periodModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        openModalWithHistory(periodModal);
       });
     }
 
     if (closePeriodBtn && periodModal) {
       closePeriodBtn.addEventListener('click', () => {
-        periodModal.classList.remove('active');
-        document.body.style.overflow = '';
+        closeModalWithHistory(periodModal);
+      });
+    }
+
+    if (periodModal) {
+      periodModal.addEventListener('click', (e) => {
+        if (e.target === periodModal) closeModalWithHistory(periodModal);
       });
     }
   }
@@ -698,15 +736,19 @@
 
     if (openDataBtn && dataModal) {
       openDataBtn.addEventListener('click', () => {
-        dataModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        openModalWithHistory(dataModal);
       });
     }
 
     if (closeDataBtn && dataModal) {
       closeDataBtn.addEventListener('click', () => {
-        dataModal.classList.remove('active');
-        document.body.style.overflow = '';
+        closeModalWithHistory(dataModal);
+      });
+    }
+
+    if (dataModal) {
+      dataModal.addEventListener('click', (e) => {
+        if (e.target === dataModal) closeModalWithHistory(dataModal);
       });
     }
 
@@ -758,8 +800,7 @@
             savePhotos();
             renderApp();
             showToast('Backup succesvol hersteld! ✅');
-            dataModal.classList.remove('active');
-            document.body.style.overflow = '';
+            closeModalWithHistory(dataModal);
           } catch (err) {
             console.error('Import parse error:', err);
             alert('Kon het bestand niet verwerken als geldige backup.');
@@ -778,8 +819,7 @@
           photosData = {};
           renderApp();
           showToast('Data gewist');
-          dataModal.classList.remove('active');
-          document.body.style.overflow = '';
+          closeModalWithHistory(dataModal);
         }
       });
     }
@@ -800,6 +840,42 @@
   function renderApp() {
     renderDaysSelector();
     renderExercisesList();
+  }
+
+  // --- NATIVE & BROWSER BACK BUTTON CONTROLLER ---
+  function setupAndroidBackButtonListeners() {
+    // 1. Browser History Popstate (werkt direct in Chrome, Safari, PWA & Android WebViews)
+    window.addEventListener('popstate', () => {
+      const activeModals = document.querySelectorAll('.modal-overlay.active');
+      activeModals.forEach(m => closeModalDirect(m));
+    });
+
+    // 2. Cordova / Android hardware backbutton event
+    document.addEventListener('backbutton', (e) => {
+      const activeModal = document.querySelector('.modal-overlay.active');
+      if (activeModal) {
+        if (e && e.preventDefault) e.preventDefault();
+        closeModalWithHistory(activeModal);
+      }
+    });
+
+    // 3. Capacitor Native App Plugin listener (voor standalone APK)
+    try {
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+        window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
+          const activeModal = document.querySelector('.modal-overlay.active');
+          if (activeModal) {
+            closeModalWithHistory(activeModal);
+          } else if (canGoBack) {
+            window.history.back();
+          } else {
+            window.Capacitor.Plugins.App.exitApp();
+          }
+        });
+      }
+    } catch (err) {
+      console.log('Capacitor App listener:', err);
+    }
   }
 
   // --- INITIALISATIE ---
@@ -830,6 +906,7 @@
     setupLogForm();
     setupPeriodization();
     setupDataBackup();
+    setupAndroidBackButtonListeners();
     registerServiceWorker();
 
     renderApp();
