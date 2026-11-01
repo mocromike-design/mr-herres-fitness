@@ -532,11 +532,13 @@
     if (!modalEl) return;
     modalEl.classList.add('active');
     document.body.style.overflow = 'hidden';
-    // Voeg history state toe zodat de Samsung/Android 'terug'-knop het venster sluit i.p.v. de app af te sluiten
+    // Zet hash op #modal zodat Android/Chromium WebView native history direct 'canGoBack = true' registreert
     try {
-      window.history.pushState({ modalOpen: true, modalId: modalEl.id }, '');
+      if (window.location.hash !== '#modal') {
+        window.location.hash = 'modal';
+      }
     } catch (e) {
-      console.log('pushState fout:', e);
+      console.log('hash set fout:', e);
     }
   }
 
@@ -556,11 +558,11 @@
     if (!modalEl) return;
     closeModalDirect(modalEl);
     try {
-      if (window.history.state && window.history.state.modalOpen) {
-        window.history.back();
+      if (window.location.hash === '#modal') {
+        history.back();
       }
     } catch (e) {
-      console.log('history.back fout:', e);
+      window.location.hash = '';
     }
   }
 
@@ -568,6 +570,23 @@
     const modal = document.getElementById('exerciseModal');
     closeModalWithHistory(modal);
   }
+
+  // Direct aangeroepen door native Android Java (MainActivity) bij fysieke/swipe terugknop
+  window.handleAndroidBack = function() {
+    const activeModal = document.querySelector('.modal-overlay.active');
+    if (activeModal) {
+      closeModalDirect(activeModal);
+      if (window.location.hash === '#modal') {
+        try {
+          history.replaceState(null, '', window.location.pathname + window.location.search);
+        } catch (e) {
+          window.location.hash = '';
+        }
+      }
+      return 'handled';
+    }
+    return 'unhandled';
+  };
 
   // --- FOTO UPLOAD HANDLER ---
   function setupPhotoUpload() {
@@ -844,13 +863,21 @@
 
   // --- NATIVE & BROWSER BACK BUTTON CONTROLLER ---
   function setupAndroidBackButtonListeners() {
-    // 1. Browser History Popstate (werkt direct in Chrome, Safari, PWA & Android WebViews)
+    // 1. Hashchange listener (universeel in Android WebView, Samsung Internet, Chrome, Safari)
+    window.addEventListener('hashchange', () => {
+      if (!window.location.hash || window.location.hash === '#' || window.location.hash === '') {
+        const activeModals = document.querySelectorAll('.modal-overlay.active');
+        activeModals.forEach(m => closeModalDirect(m));
+      }
+    });
+
+    // 2. Browser History Popstate
     window.addEventListener('popstate', () => {
       const activeModals = document.querySelectorAll('.modal-overlay.active');
       activeModals.forEach(m => closeModalDirect(m));
     });
 
-    // 2. Cordova / Android hardware backbutton event
+    // 3. Cordova / Android hardware backbutton event
     document.addEventListener('backbutton', (e) => {
       const activeModal = document.querySelector('.modal-overlay.active');
       if (activeModal) {
@@ -859,7 +886,7 @@
       }
     });
 
-    // 3. Capacitor Native App Plugin listener (voor standalone APK)
+    // 4. Capacitor Native App Plugin listener (voor standalone APK)
     try {
       if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
         window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
@@ -875,6 +902,13 @@
       }
     } catch (err) {
       console.log('Capacitor App listener:', err);
+    }
+
+    // Schoon eventuele oude hash op bij opstarten
+    if (window.location.hash === '#modal') {
+      try {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      } catch (e) {}
     }
   }
 
