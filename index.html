@@ -1,0 +1,1214 @@
+﻿<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Mr. Herres Trainingsapp</title>
+  
+  <!-- PWA & Android Meta Tags -->
+  <meta name="theme-color" content="#0c0d10">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Het officiÃ«le trainings- en periodiseringsschema van Mr. Herres.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/jpeg" href="logo.jpg">
+  <link rel="apple-touch-icon" href="logo.jpg">
+
+    <!-- Inlined CSS for 100% Guaranteed Offline Styling -->
+  <style>
+/* Mr. Herres Trainingsapp - Premium Dark Gym UI */
+:root {
+  --bg-main: #0c0d10;
+  --bg-card: #15181e;
+  --bg-card-hover: #1c212a;
+  --bg-input: #101217;
+  --border: #242934;
+  --border-focus: #f59e0b;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --accent: #f59e0b;
+  --accent-light: #fbbf24;
+  --accent-glow: rgba(245, 158, 11, 0.25);
+  --success: #10b981;
+  --danger: #ef4444;
+  --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 40px;
+  overflow-x: hidden;
+}
+
+/* App Header */
+.app-header {
+  background: linear-gradient(180deg, rgba(21, 24, 30, 0.95) 0%, rgba(12, 13, 16, 0.9) 100%);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  border-bottom: 1px solid var(--border);
+  padding: 14px 18px;
+}
+
+.header-container {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  background: #11141a;
+  flex-shrink: 0;
+}
+
+.brand-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.brand-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(90deg, #ffffff 40%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover, .icon-btn:active {
+  border-color: var(--accent);
+  background: var(--bg-card-hover);
+}
+
+/* Main Container */
+.main-content {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* Periodization Banner */
+.period-banner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(21, 24, 30, 0.8) 100%);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.period-info h3 {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent-light);
+  margin-bottom: 4px;
+}
+
+.period-info p {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.period-toggle-btn {
+  background: rgba(245, 158, 11, 0.2);
+  border: 1px solid var(--accent);
+  color: var(--accent-light);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Day Selector */
+.day-selector-section {
+  margin-bottom: 22px;
+}
+
+.section-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.week-switch-wrapper {
+  display: flex;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  margin-bottom: 12px;
+}
+
+.week-switch-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.week-switch-btn.active {
+  background: var(--accent);
+  color: #0c0d10;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.days-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+.days-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.days-scroll::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.day-pill {
+  flex: 0 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 78px;
+  transition: all 0.2s ease;
+}
+
+.day-pill:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.day-pill.active {
+  background: #1c212b;
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.day-pill .day-code {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.day-pill.active .day-code {
+  color: var(--accent-light);
+}
+
+.day-pill .day-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Selected Day Banner */
+.day-header-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius-md);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
+.day-header-card h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.day-header-card p {
+  font-size: 0.85rem;
+  color: var(--accent-light);
+}
+
+/* Exercises List */
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.exercise-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+}
+
+.exercise-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-1px);
+}
+
+.exercise-card:active {
+  transform: scale(0.985);
+}
+
+.ex-thumb {
+  width: 58px;
+  height: 58px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #0f1217;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ex-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ex-thumb-fallback {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #151922;
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.ex-info {
+  flex: 1;
+}
+
+.ex-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ex-num {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--accent);
+  background: rgba(245, 158, 11, 0.15);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.ex-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.ex-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.badge-target {
+  background: #1f2937;
+  color: #93c5fd;
+  border: 1px solid #374151;
+}
+
+.badge-reps {
+  background: #27272a;
+  color: #e4e4e7;
+  border: 1px solid #3f3f46;
+}
+
+.badge-log {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-empty {
+  background: rgba(148, 163, 184, 0.1);
+  color: var(--text-muted);
+}
+
+.ex-arrow {
+  color: var(--text-muted);
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  width: 100%;
+  max-width: 680px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-overlay.active .modal-container {
+  transform: translateY(0);
+}
+
+@media (min-width: 680px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+  .modal-container {
+    border-radius: var(--radius-lg);
+    max-height: 88vh;
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+}
+
+.modal-title-group h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.modal-title-group p {
+  font-size: 0.85rem;
+  color: var(--accent-light);
+  margin-top: 4px;
+}
+
+.close-btn {
+  background: #262b36;
+  border: none;
+  color: var(--text-muted);
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background: #323947;
+  color: #fff;
+}
+
+/* 1-Line Description Box */
+.tip-box {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 4px solid var(--accent);
+  padding: 10px 14px;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-bottom: 18px;
+}
+
+.tip-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--accent-light);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.tip-text {
+  font-size: 0.9rem;
+  color: #f1f5f9;
+  font-weight: 500;
+}
+
+/* 1 Foto Section */
+.photos-section {
+  margin-bottom: 24px;
+}
+
+.single-photo-card {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.single-photo-display {
+  width: 100%;
+  min-height: 220px;
+  max-height: 380px;
+  background: #0b0d11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.single-photo-display img {
+  width: 100%;
+  max-height: 380px;
+  object-fit: contain;
+  background-color: #0b0d11;
+  display: block;
+}
+
+.photo-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.photo-placeholder svg {
+  width: 56px;
+  height: 56px;
+  fill: none;
+  stroke: #475569;
+  stroke-width: 1.5;
+  margin-bottom: 8px;
+}
+
+.photo-placeholder span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.photo-action-btn {
+  background: #181d26;
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: all 0.2s;
+}
+
+.photo-action-btn:hover {
+  background: #222936;
+  color: var(--accent-light);
+}
+
+/* Weight Logger Card */
+.logger-card {
+  background: #13161c;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 22px;
+}
+
+.logger-card h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-main);
+}
+
+.log-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.form-group input {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.date-input-container {
+  display: flex;
+  position: relative;
+  align-items: center;
+  width: 100%;
+}
+
+.date-input-container input[type="text"] {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.calendar-btn {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.calendar-btn:hover, .calendar-btn:active {
+  color: var(--accent-light);
+  background: rgba(245, 158, 11, 0.15);
+}
+
+.primary-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #0c0d10;
+  border: none;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px var(--accent-glow);
+  transition: transform 0.1s ease, filter 0.2s ease;
+}
+
+.primary-btn:active {
+  transform: scale(0.98);
+  filter: brightness(0.9);
+}
+
+/* Chart Section */
+.chart-section {
+  background: #13161c;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.chart-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.pr-badge {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-light);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+}
+
+.chart-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.empty-chart-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 20px;
+}
+
+/* History Logs */
+.history-section h3 {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.history-item {
+  background: #181d26;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-weight {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.history-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.history-delete-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.history-delete-btn:hover {
+  color: var(--danger);
+}
+
+/* Periodization Modal */
+.period-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.period-item {
+  background: #181d26;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px;
+}
+
+.period-item.current {
+  border-color: var(--accent);
+  background: #202633;
+}
+
+.period-week-title {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent-light);
+  margin-bottom: 4px;
+}
+
+.period-desc {
+  font-size: 0.85rem;
+  color: #e2e8f0;
+}
+
+/* Data Modal */
+.data-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.secondary-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-main);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.secondary-btn:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent);
+}
+
+.danger-btn {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.danger-btn:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: var(--danger);
+}
+
+/* Toast Notification */
+.toast-msg {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #10b981;
+  color: #052e16;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  z-index: 200;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.toast-msg.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+  </style>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand-wrapper">
+        <div class="brand-icon">
+          <img src="logo.jpg" alt="Mr. Herres Gym Logo">
+        </div>
+        <div>
+          <h1 class="brand-title">Mr. Herres</h1>
+          <span class="brand-subtitle">Trainingsapp</span>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="openPeriodBtn" class="icon-btn" title="Periodisering">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Schema
+        </button>
+        <button id="openDataBtn" class="icon-btn" title="Mijn Gegevens">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hoofdinhoud -->
+  <main class="main-content">
+    
+    <!-- Periodisering Alert Banner -->
+    <section class="period-banner">
+      <div class="period-info">
+        <h3>Periodiserings Cyclus</h3>
+        <p>Voer 4 weken uit volgens RIR (Reps in Reserve) richtlijn.</p>
+      </div>
+      <button class="period-toggle-btn" onclick="document.getElementById('openPeriodBtn').click()">Uitleg bekijken</button>
+    </section>
+
+    <!-- Dag & Week Kiezer -->
+    <section class="day-selector-section">
+      <div class="week-switch-wrapper">
+        <button class="week-switch-btn active" data-week="1">Week A</button>
+        <button class="week-switch-btn" data-week="2">Week B</button>
+      </div>
+      
+      <div class="section-label">
+        <span>Kies je trainingsdag</span>
+      </div>
+
+      <div class="days-scroll" id="daysScroll">
+        <!-- Wordt dynamisch gevuld via app.js -->
+      </div>
+    </section>
+
+    <!-- Geselecteerde Dag Banner -->
+    <section class="day-header-card">
+      <h2 id="selectedDayTitle">Laden...</h2>
+      <p id="selectedDayFocus">Focus spiergroepen</p>
+    </section>
+
+    <!-- Oefeningen Lijst -->
+    <section class="exercise-list" id="exerciseList">
+      <!-- Oefeningen kaarten worden hier gegenereerd -->
+    </section>
+  </main>
+
+  <!-- MODAL: OEFENING DETAILS, FOTO'S, LOGGEN & GRAFIEK -->
+  <div class="modal-overlay" id="exerciseModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h2 id="modalExerciseName">Oefening</h2>
+          <p id="modalExerciseMeta">4 sets Ã— 5-8 reps â€¢ Doelwit</p>
+        </div>
+        <button class="close-btn" id="closeModalBtn">&times;</button>
+      </div>
+
+      <!-- 1-Regelige Instructie -->
+      <div class="tip-box">
+        <span class="tip-label">Uitvoeringstip (Max 1 regel)</span>
+        <div class="tip-text" id="modalTipText">Houd je schouders naar achteren en duw krachtig uit.</div>
+      </div>
+
+      <!-- 1 Oefeningsfoto -->
+      <section class="photos-section">
+        <div class="photo-card single-photo-card">
+          <div class="photo-display single-photo-display" id="exercisePhotoContainer"></div>
+          <button class="photo-action-btn" id="uploadPhotoBtn">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            Foto wijzigen / toevoegen
+          </button>
+        </div>
+        <!-- Verborgen input voor camera/upload -->
+        <input type="file" id="photoFileInput" accept="image/*" style="display: none;">
+      </section>
+
+      <!-- Gewicht & Voortgang Logger -->
+      <section class="logger-card">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><path d="M12 5v14M5 12h14"/></svg>
+          Gewicht & Training Loggen
+        </h3>
+        <div class="log-form-grid">
+          <div class="form-group">
+            <label for="logWeight">Gewicht (kg)</label>
+            <input type="number" id="logWeight" step="0.5" placeholder="bv. 80" inputmode="decimal">
+          </div>
+          <div class="form-group">
+            <label for="logReps">Reps (Herhalingen)</label>
+            <input type="number" id="logReps" step="1" placeholder="bv. 8" inputmode="numeric">
+          </div>
+          <div class="form-group">
+            <label for="logDate">Datum (DD/MM/JJJJ)</label>
+            <div class="date-input-container">
+              <input type="text" id="logDate" placeholder="DD/MM/JJJJ" inputmode="numeric">
+              <button type="button" id="calendarPickBtn" class="calendar-btn" title="Kies datum uit kalender">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+              </button>
+              <input type="date" id="logDateHiddenPicker" tabindex="-1" style="position: absolute; opacity: 0; pointer-events: none; width: 0; height: 0;">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="logNotes">Notitie (optioneel)</label>
+            <input type="text" id="logNotes" placeholder="bv. RIR 1, voelde sterk">
+          </div>
+        </div>
+        <button class="primary-btn" id="saveLogBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Log Opslaan
+        </button>
+      </section>
+
+      <!-- Voortgangsgrafiek (Gewicht vs Datum) -->
+      <section class="chart-section">
+        <div class="chart-header">
+          <h3>Voortgangsgrafiek (Gewicht)</h3>
+          <span class="pr-badge" id="modalPrBadge" style="display: none;">PR: 0 kg</span>
+        </div>
+        <div class="chart-wrapper">
+          <canvas id="progressChart" class="chart-canvas"></canvas>
+          <div id="chartEmptyMsg" class="empty-chart-msg">
+            Nog geen metingen. Vul hierboven een gewicht in en druk op 'Log Opslaan' om je eerste grafiekpunt te zien!
+          </div>
+        </div>
+      </section>
+
+      <!-- Trainingsgeschiedenis Lijst -->
+      <section class="history-section">
+        <h3>Eerdere Logboeken</h3>
+        <div class="history-list" id="historyList">
+          <!-- Wordt dynamisch geladen -->
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- MODAL: PERIODISERING OVERZICHT -->
+  <div class="modal-overlay" id="periodModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group" style="display: flex; align-items: center; gap: 12px;">
+          <img src="logo.jpg" alt="Logo" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; flex-shrink: 0;">
+          <div>
+            <h2>Periodisering Schema</h2>
+            <p>4 Weken Krachtopbouw & Deload</p>
+          </div>
+        </div>
+        <button class="close-btn" id="closePeriodBtn">&times;</button>
+      </div>
+
+      <div class="period-list">
+        <div class="period-item">
+          <div class="period-week-title">Week 1: Week A (RIR 2)</div>
+          <div class="period-desc">Voer Week A uit. Houd 2 herhalingen over in reserve bij elke zware werkset.</div>
+        </div>
+        <div class="period-item">
+          <div class="period-week-title">Week 2: Week B (RIR 1)</div>
+          <div class="period-desc">Voer Week B uit. Verhoog het gewicht of de herhalingen iets. Houd nog 1 herhaling over.</div>
+        </div>
+        <div class="period-item">
+          <div class="period-week-title">Week 3: Week A (RIR 0 - Maximaal)</div>
+          <div class="period-desc">Voer Week A uit. Ga tot het uiterste met zwaardere gewichten (tot technisch spierfalen).</div>
+        </div>
+        <div class="period-item">
+          <div class="period-week-title">Week 4: Week B (Deload)</div>
+          <div class="period-desc">Voer Week B uit als Deload. Pak 20% minder gewicht, haal 1 set van elke oefening af. Geef je zenuwstelsel en pezen rust.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: DATA BACKUP / EXPORT / IMPORT -->
+  <div class="modal-overlay" id="dataModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group" style="display: flex; align-items: center; gap: 12px;">
+          <img src="logo.jpg" alt="Logo" style="width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--accent); object-fit: cover; flex-shrink: 0;">
+          <div>
+            <h2>Gegevens & Backup</h2>
+            <p>Beheer je trainingslogs en foto's</p>
+          </div>
+        </div>
+        <button class="close-btn" id="closeDataBtn">&times;</button>
+      </div>
+
+      <div class="data-actions">
+        <p style="font-size: 0.85rem; color: #94a3b8;">
+          Al je gegevens (gelogde gewichten, data en foto's) worden 100% privÃ© op je eigen Samsung toestel bewaard. Gebruik onderstaande knoppen om een backup te downloaden of over te zetten naar een andere telefoon.
+        </p>
+
+        <button class="secondary-btn" id="exportDataBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Exporteer Backup (JSON bestand)
+        </button>
+
+        <label class="secondary-btn" style="cursor: pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+          Importeer Backup
+          <input type="file" id="importDataInput" accept="*/*" style="display: none;">
+        </label>
+
+        <button class="secondary-btn danger-btn" id="resetDataBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          Wis Alle Lokale Data
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notificatie -->
+  <div class="toast-msg" id="toast">Opgeslagen!</div>
+
+  <!-- Scripts -->
+  <script src="data.js?v=9"></script>
+  <script src="app.js?v=9"></script>
+</body>
+</html>
